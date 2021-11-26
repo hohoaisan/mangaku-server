@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 const Joi = require('joi');
 const { password } = require('./custom.validation');
 
@@ -6,6 +7,18 @@ const register = {
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
+    confirmPassword: Joi.string()
+      .valid(Joi.ref('password'))
+      .required()
+      .custom(password)
+      .error((errs) => {
+        return errs.map((err) => {
+          if (err.code === 'any.only') {
+            err.message = 'password does not match';
+          }
+          return err;
+        });
+      }),
   }),
 };
 
