@@ -10,16 +10,25 @@ class genre extends Sequelize.Model {
           defaultValue: DataTypes.UUIDV4,
           primaryKey: true,
         },
+        key: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          unique: true,
+        },
         name: {
           type: DataTypes.STRING,
           allowNull: false,
+        },
+        description: {
+          type: DataTypes.STRING,
+          allowNull: true,
         },
       },
       {
         sequelize,
         tableName: 'genre',
         schema: 'public',
-        timestamps: false,
+        timestamps: true,
         indexes: [
           {
             name: 'genre_pkey',
@@ -29,6 +38,12 @@ class genre extends Sequelize.Model {
         ],
       }
     );
+    super.beforeSave((g) => {
+      if (g.key) {
+        // eslint-disable-next-line no-param-reassign
+        g.key = g.key.toLowerCase();
+      }
+    });
     return genre;
   }
 }
