@@ -3,6 +3,7 @@ const authRoute = require('./auth.route');
 const userRoute = require('./user.route');
 const profileRoute = require('./profile.route');
 const genreRoute = require('./genre.route');
+const formatRoute = require('./format.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 
@@ -24,6 +25,10 @@ const defaultRoutes = [
   {
     path: '/genres',
     route: genreRoute,
+  },
+  {
+    path: '/formats',
+    route: formatRoute,
   },
 ];
 
