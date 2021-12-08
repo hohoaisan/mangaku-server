@@ -1,5 +1,8 @@
 const Sequelize = require('sequelize');
+const { Op } = require('sequelize');
 const { statuses } = require('../constraints/approvalStatus');
+const plugins = require('./plugins');
+const User = require('./user');
 
 class author extends Sequelize.Model {
   static init(sequelize, DataTypes) {
@@ -11,7 +14,7 @@ class author extends Sequelize.Model {
           defaultValue: DataTypes.UUIDV4,
           primaryKey: true,
         },
-        user: {
+        userId: {
           type: DataTypes.UUID,
           allowNull: true,
           references: {
@@ -23,10 +26,14 @@ class author extends Sequelize.Model {
           type: DataTypes.STRING,
           allowNull: false,
         },
+        description: {
+          type: DataTypes.STRING,
+          allowNull: true,
+        },
         approval_status: {
           type: DataTypes.STRING,
-          allowNull: false,
-          defaultValue: statuses[0],
+          allowNull: true,
+          defaultValue: null,
           validate: {
             isIn: statuses,
           },
@@ -42,6 +49,7 @@ class author extends Sequelize.Model {
         tableName: 'author',
         schema: 'public',
         timestamps: true,
+        paranoid: true,
         indexes: [
           {
             name: 'author_pkey',
@@ -49,9 +57,46 @@ class author extends Sequelize.Model {
             fields: [{ name: 'id' }],
           },
         ],
+        defaultScope: {
+          attributes: {
+            exclude: ['userId', 'createdAt', 'updatedAt', 'deletedAt', 'restricted', 'approval_status'],
+          },
+          where: {
+            restricted: false,
+            [Op.or]: [
+              {
+                userId: null,
+                approval_status: null,
+              },
+              {
+                userId: { [Op.not]: null },
+                approval_status: 'approved',
+              },
+            ],
+          },
+        },
+        scopes: {
+          all: {
+            include: { model: User, as: 'user' },
+            paranoid: false,
+          },
+          visible: {
+            include: { model: User, as: 'user' },
+          },
+          deleted: {
+            include: { model: User, as: 'user' },
+            where: {
+              deletedAt: { [Op.not]: null },
+            },
+            paranoid: false,
+          },
+        },
       }
     );
     return author;
   }
 }
+
+plugins.paginate(author);
+
 module.exports = author;
