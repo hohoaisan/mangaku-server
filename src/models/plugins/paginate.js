@@ -59,10 +59,22 @@ const paginate = (Model) => {
     let page = options.page && parseInt(options.page, 10) > 0 ? parseInt(options.page, 10) : 1;
 
     const pages = Math.ceil(total / limit);
-    if (page > pages) page = pages;
+    if (page > pages && pages !== 0) page = pages;
 
     options.limit = limit;
-    options.offset = limit * (page - 1);
+    options.offset = limit * (page - 1) >= 0 ? limit * (page - 1) : 0;
+    // Sorting
+    if (options.sortBy) {
+      const SORT_KEYS = ['ASC', 'DESC'];
+      const sortingCriteria = [];
+      options.sortBy.split(',').forEach((sortOption) => {
+        const [key, order] = sortOption.split(':');
+        sortingCriteria.push([key, SORT_KEYS.includes(order.toUpperCase()) ? order : SORT_KEYS[0]]);
+      });
+      options.order = sortingCriteria;
+    } else {
+      options.order = [['createdAt', 'ASC']];
+    }
     /* eslint-enable no-console */
     if (params.order) options.order = params.order;
     const data = await this.findAll(options);

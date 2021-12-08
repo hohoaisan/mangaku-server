@@ -4,3 +4,4 @@ module.exports.tokenService = require('./token.service');
 module.exports.userService = require('./user.service');
 module.exports.genreService = require('./genre.service');
 module.exports.formatService = require('./format.service');
+module.exports.authorService = require('./author.service');
