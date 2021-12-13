@@ -7,8 +7,8 @@ const ApiError = require('../utils/ApiError');
  * @param {ObjectId} id
  * @returns {Promise<User>}
  */
-const getUserById = async (id, options) => {
-  return User.findByPk(id, options);
+const getUserById = async (id, scope = 'defaultScope') => {
+  return User.scope(scope).findByPk(id);
 };
 
 /**
@@ -56,8 +56,8 @@ const createUser = async (userBody) => {
  * @param {number} [options.page] - Current page (default = 1)
  * @returns {Promise<QueryResult>}
  */
-const queryUsers = async (filter, options) => {
-  const users = await User.paginate(options);
+const queryUsers = async (options, scope) => {
+  const users = await User.scope(scope).paginate(options);
   return users;
 };
 

@@ -3,6 +3,8 @@ const pick = require('../utils/pick');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { userService } = require('../services');
+const withSequelizeSearch = require('../utils/withSequelizeSearch');
+const withScope = require('../utils/withScope');
 
 const createUser = catchAsync(async (req, res) => {
   const user = await userService.createUser(req.body);
@@ -10,10 +12,13 @@ const createUser = catchAsync(async (req, res) => {
 });
 
 const getUsers = catchAsync(async (req, res) => {
-  // const filter = pick(req.query, ['name', 'role']);
-  const filter = {};
-  const options = pick(req.query, ['limit', 'page']);
-  const result = await userService.queryUsers(filter, options);
+  const { search, scope } = pick(req.query, ['search', 'scope']);
+  let options = pick(req.query, ['sortBy', 'page', 'limit']);
+  options = withSequelizeSearch(search, ['name', 'email'])(options);
+  const queryScope = withScope(req.user, {
+    [scope || 'visible']: 'manageAuthors',
+  });
+  const result = await userService.queryUsers(options, queryScope);
   res.send(result);
 });
 
@@ -26,7 +31,16 @@ const getUser = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
-  const user = await userService.updateUserById(req.params.userId, req.body);
+  const updateBody = pick(req.body, ['name', 'email', 'password', 'banned', 'emailVerified']);
+  const updateOptions = pick(req.body, ['restore']);
+  const currentUser = await userService.getUserById(req.params.userId, 'all');
+  if (!currentUser) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  if (updateOptions.restore) {
+    await currentUser.restore();
+  }
+  const user = await currentUser.update(updateBody);
   res.send(user);
 });
 

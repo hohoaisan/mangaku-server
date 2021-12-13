@@ -6,7 +6,7 @@ const createUser = {
     email: Joi.string().required().email(),
     password: Joi.string().required().custom(password),
     name: Joi.string().required(),
-    role: Joi.string().required().valid('user', 'admin'),
+    role: Joi.string(),
   }),
 };
 
@@ -17,6 +17,8 @@ const getUsers = {
     sortBy: Joi.string(),
     limit: Joi.number().integer(),
     page: Joi.number().integer(),
+    scope: Joi.string().allow(null),
+    search: Joi.string().allow('', null),
   }),
 };
 
@@ -35,6 +37,9 @@ const updateUser = {
       email: Joi.string().email(),
       password: Joi.string().custom(password),
       name: Joi.string(),
+      banned: Joi.boolean(),
+      emailVerified: Joi.boolean(),
+      restore: Joi.string().allow(true),
     })
     .min(1),
 };
