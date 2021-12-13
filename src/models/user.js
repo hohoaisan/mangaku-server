@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const { Op } = require('sequelize');
 const bcrypt = require('bcryptjs');
 const plugins = require('./plugins');
 const { roles } = require('../config/roles');
@@ -37,7 +38,12 @@ class User extends Sequelize.Model {
             isIn: roles,
           },
         },
-        emailverified: {
+        emailVerified: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: false,
+        },
+        banned: {
           type: DataTypes.BOOLEAN,
           allowNull: false,
           defaultValue: false,
@@ -48,6 +54,7 @@ class User extends Sequelize.Model {
         tableName: 'user',
         schema: 'public',
         timestamps: true,
+        paranoid: true,
         indexes: [
           {
             name: 'user_email_key',
@@ -62,6 +69,18 @@ class User extends Sequelize.Model {
         ],
         defaultScope: {
           attributes: { exclude: ['password'] },
+        },
+        scopes: {
+          all: {
+            paranoid: false,
+          },
+          visible: {},
+          deleted: {
+            where: {
+              deletedAt: { [Op.not]: null },
+            },
+            paranoid: false,
+          },
         },
       }
     );
