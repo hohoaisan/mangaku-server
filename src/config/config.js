@@ -64,4 +64,7 @@ module.exports = {
     },
     from: envVars.EMAIL_FROM,
   },
+  file: {
+    staticPath: envVars.STATIC_FILES_PATH,
+  },
 };

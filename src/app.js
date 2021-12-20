@@ -23,6 +23,10 @@ if (config.env !== 'test') {
 // set security HTTP headers
 app.use(helmet());
 
+// serve static files
+const { staticPath } = config.file;
+app.use(`/${staticPath}`, express.static(staticPath));
+
 // parse json request body
 app.use(express.json());
 
