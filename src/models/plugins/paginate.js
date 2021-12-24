@@ -1,3 +1,4 @@
+const sortByConvert = require('../../utils/sortByConvert');
 // https://github.com/eclass/sequelize-paginate/
 /**
  * Class to paginate sequelite results.
@@ -65,19 +66,17 @@ const paginate = (Model) => {
     options.offset = limit * (page - 1) >= 0 ? limit * (page - 1) : 0;
     // Sorting
     if (options.sortBy) {
-      const SORT_KEYS = ['ASC', 'DESC'];
-      const sortingCriteria = [];
-      options.sortBy.split(',').forEach((sortOption) => {
-        const [key, order] = sortOption.split(':');
-        sortingCriteria.push([key, SORT_KEYS.includes(order.toUpperCase()) ? order : SORT_KEYS[0]]);
-      });
+      const sortingCriteria = sortByConvert(options.sortBy);
       options.order = sortingCriteria;
     } else {
       options.order = [['createdAt', 'ASC']];
     }
     /* eslint-enable no-console */
     if (params.order) options.order = params.order;
-    const data = await this.findAll(options);
+    const data = await this.findAll({
+      ...options,
+      subQuery: false,
+    });
     return { page, pages, limit, total, data };
   };
   const instanceOrModel = Model.Instance || Model;

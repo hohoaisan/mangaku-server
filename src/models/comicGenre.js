@@ -4,7 +4,7 @@ class comicGenre extends Sequelize.Model {
   static init(sequelize, DataTypes) {
     super.init(
       {
-        comic: {
+        comicId: {
           type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true,
@@ -13,7 +13,7 @@ class comicGenre extends Sequelize.Model {
             key: 'id',
           },
         },
-        genre: {
+        genreId: {
           type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true,
@@ -32,7 +32,7 @@ class comicGenre extends Sequelize.Model {
           {
             name: 'comic_genre_pkey',
             unique: true,
-            fields: [{ name: 'comic' }, { name: 'genre' }],
+            fields: [{ name: 'comicId' }, { name: 'genreId' }],
           },
         ],
       }

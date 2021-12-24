@@ -4,7 +4,7 @@ class page extends Sequelize.Model {
   static init(sequelize, DataTypes) {
     super.init(
       {
-        chapter: {
+        chapterId: {
           type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true,
@@ -13,7 +13,7 @@ class page extends Sequelize.Model {
             key: 'id',
           },
         },
-        image: {
+        imageId: {
           type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true,
@@ -31,12 +31,12 @@ class page extends Sequelize.Model {
         sequelize,
         tableName: 'page',
         schema: 'public',
-        timestamps: true,
+        timestamps: false,
         indexes: [
           {
             name: 'page_pkey',
             unique: true,
-            fields: [{ name: 'chapter' }, { name: 'image' }],
+            fields: [{ name: 'chapterId' }, { name: 'imageId' }],
           },
         ],
       }

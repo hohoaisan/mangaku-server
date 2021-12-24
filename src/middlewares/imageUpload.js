@@ -20,7 +20,9 @@ const storage = multer.diskStorage({
     cb(null, UPLOAD_DESTINATION);
   },
   filename(req, file, cb) {
-    const newFileName = `${path.parse(file.originalname).name}-${Date.now()}${path.extname(file.originalname)}`;
+    const newFileName = `${path.parse(file.originalname).name}-${Date.now()}${path.extname(file.originalname)}`
+      .toLowerCase()
+      .replace(/ /g, '');
     cb(null, newFileName); // Appending extension
   },
 });

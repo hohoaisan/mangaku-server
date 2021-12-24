@@ -4,7 +4,7 @@ class comicCover extends Sequelize.Model {
   static init(sequelize, DataTypes) {
     super.init(
       {
-        comic: {
+        comicId: {
           type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true,
@@ -13,7 +13,7 @@ class comicCover extends Sequelize.Model {
             key: 'id',
           },
         },
-        image: {
+        imageId: {
           type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true,
@@ -37,7 +37,7 @@ class comicCover extends Sequelize.Model {
           {
             name: 'comic_cover_pkey',
             unique: true,
-            fields: [{ name: 'comic' }, { name: 'image' }],
+            fields: [{ name: 'comicId' }, { name: 'imageId' }],
           },
         ],
       }
