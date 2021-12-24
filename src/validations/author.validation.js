@@ -33,7 +33,6 @@ const updateAuthor = {
       name: Joi.string().allow(null),
       description: Joi.string().allow(''),
       restricted: Joi.boolean().allow(null),
-      deletedAt: Joi.string().allow(null),
       restore: Joi.string().allow(true),
     })
     .min(1),

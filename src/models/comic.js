@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const { statuses } = require('../constraints/approvalStatus');
+const plugins = require('./plugins');
 
 class comic extends Sequelize.Model {
   static init(sequelize, DataTypes) {
@@ -11,19 +12,19 @@ class comic extends Sequelize.Model {
           defaultValue: DataTypes.UUIDV4,
           primaryKey: true,
         },
-        name: {
+        title: {
           type: DataTypes.STRING,
           allowNull: false,
         },
         description: {
-          type: DataTypes.STRING,
+          type: DataTypes.TEXT,
           allowNull: true,
           defaultValue: '',
         },
         approval_status: {
           type: DataTypes.STRING,
-          allowNull: false,
-          defaultValue: statuses[0],
+          allowNull: true,
+          defaultValue: null,
           validate: {
             isIn: statuses,
           },
@@ -44,6 +45,7 @@ class comic extends Sequelize.Model {
         tableName: 'comic',
         schema: 'public',
         timestamps: true,
+        paranoid: true,
         indexes: [
           {
             name: 'comic_pkey',
@@ -56,5 +58,7 @@ class comic extends Sequelize.Model {
     return comic;
   }
 }
+
+plugins.paginate(comic);
 
 module.exports = comic;

@@ -5,6 +5,8 @@ const profileRoute = require('./profile.route');
 const genreRoute = require('./genre.route');
 const formatRoute = require('./format.route');
 const authorRoute = require('./author.route');
+const imageRoute = require('./image.route');
+const comicRoute = require('./comic.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 
@@ -34,6 +36,14 @@ const defaultRoutes = [
   {
     path: '/authors',
     route: authorRoute,
+  },
+  {
+    path: '/images',
+    route: imageRoute,
+  },
+  {
+    path: '/comics',
+    route: comicRoute,
   },
 ];
 

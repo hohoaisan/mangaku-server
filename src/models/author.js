@@ -58,22 +58,22 @@ class author extends Sequelize.Model {
           },
         ],
         defaultScope: {
-          attributes: {
-            exclude: ['userId', 'createdAt', 'updatedAt', 'deletedAt', 'restricted', 'approval_status'],
-          },
-          where: {
-            restricted: false,
-            [Op.or]: [
-              {
-                userId: null,
-                approval_status: null,
-              },
-              {
-                userId: { [Op.not]: null },
-                approval_status: 'approved',
-              },
-            ],
-          },
+          // attributes: {
+          //   exclude: ['userId', 'createdAt', 'updatedAt', 'deletedAt', 'restricted', 'approval_status'],
+          // },
+          // where: {
+          //   restricted: false,
+          //   [Op.or]: [
+          //     {
+          //       userId: null,
+          //       approval_status: null,
+          //     },
+          //     {
+          //       userId: { [Op.not]: null },
+          //       approval_status: 'approved',
+          //     },
+          //   ],
+          // },
         },
         scopes: {
           all: {

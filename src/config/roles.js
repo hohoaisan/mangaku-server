@@ -1,6 +1,6 @@
 const allRoles = {
   user: [],
-  admin: ['getUsers', 'manageUsers', 'manageAuthors', 'manageGenres', 'manageFormats'],
+  admin: ['getUsers', 'manageUsers', 'manageAuthors', 'manageGenres', 'manageFormats', 'manageComics'],
   author: [],
   mod: ['getUsers', 'manageUsers', 'manageAuthors', 'manageGenres', 'manageFormats'],
 };

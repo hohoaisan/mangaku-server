@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const { statuses } = require('../constraints/approvalStatus');
+const plugins = require('./plugins');
 
 class chapter extends Sequelize.Model {
   static init(sequelize, DataTypes) {
@@ -11,7 +12,7 @@ class chapter extends Sequelize.Model {
           defaultValue: DataTypes.UUIDV4,
           primaryKey: true,
         },
-        comic: {
+        comicId: {
           type: DataTypes.UUID,
           allowNull: false,
           references: {
@@ -23,18 +24,17 @@ class chapter extends Sequelize.Model {
           type: DataTypes.DOUBLE,
           allowNull: false,
         },
-        approval_status: {
+        name: {
           type: DataTypes.STRING,
           allowNull: false,
-          defaultValue: statuses[0],
+        },
+        approval_status: {
+          type: DataTypes.STRING,
+          allowNull: true,
+          defaultValue: null,
           validate: {
             isIn: statuses,
           },
-        },
-        lastchap: {
-          type: DataTypes.BOOLEAN,
-          allowNull: false,
-          defaultValue: false,
         },
         numPages: {
           type: DataTypes.INTEGER,
@@ -43,7 +43,7 @@ class chapter extends Sequelize.Model {
         },
         volume: {
           type: DataTypes.INTEGER,
-          allowNull: true,
+          allowNull: false,
           defaultValue: 1,
         },
       },
@@ -51,6 +51,7 @@ class chapter extends Sequelize.Model {
         sequelize,
         tableName: 'chapter',
         schema: 'public',
+        paranoid: true,
         timestamps: true,
         indexes: [
           {
@@ -64,5 +65,7 @@ class chapter extends Sequelize.Model {
     return chapter;
   }
 }
+
+plugins.paginate(chapter);
 
 module.exports = chapter;
