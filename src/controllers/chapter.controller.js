@@ -32,7 +32,11 @@ const getComicChapter = [
     if (!chapter) {
       throw new ApiError(httpStatus.NOT_FOUND, 'Chapter not found or had been deleted');
     }
+    const nextChapter = await chapterService.getNextChapterOf(chapter);
+    const prevChapter = await chapterService.getPrevChapterOf(chapter);
     chapter = chapter.toJSON();
+    chapter.nextChapter = nextChapter;
+    chapter.prevChapter = prevChapter;
     if (chapter && chapter.pages) {
       chapter.pages = chapter.pages.map((page) => flatChapterPage(page));
     }
