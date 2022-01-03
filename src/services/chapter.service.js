@@ -139,6 +139,48 @@ const updateComicChapterById = async (comicId, chapterId, updateBody, options) =
   }
 };
 
+const getNextChapterOf = async (chapter) => {
+  // TODO: get based on approval_status, currently get all non deleted record
+  return Chapter.findOne({
+    where: {
+      comicId: chapter.comicId,
+      number: { [Op.gte]: chapter.number },
+      volume: { [Op.gte]: chapter.volume },
+      createdAt: { [Op.gte]: chapter.createdAt },
+      id: { [Op.not]: chapter.id },
+    },
+    order: [
+      ['number', 'ASC'],
+      ['volume', 'ASC'],
+      ['createdAt', 'ASC'],
+    ],
+    attributes: {
+      exclude: ['deletedAt', 'updatedAt'],
+    },
+  });
+};
+
+const getPrevChapterOf = async (chapter) => {
+  // TODO: get based on approval_status, currently get all non deleted record
+  return Chapter.findOne({
+    where: {
+      comicId: chapter.comicId,
+      number: { [Op.lte]: chapter.number },
+      volume: { [Op.lte]: chapter.volume },
+      createdAt: { [Op.lte]: chapter.createdAt },
+      id: { [Op.not]: chapter.id },
+    },
+    order: [
+      ['number', 'DESC'],
+      ['volume', 'DESC'],
+      ['createdAt', 'DESC'],
+    ],
+    attributes: {
+      exclude: ['deletedAt', 'updatedAt'],
+    },
+  });
+};
+
 module.exports = {
   getChapterById,
   getChapterByIdAndComicId,
@@ -146,4 +188,6 @@ module.exports = {
   queryComicChapters,
   deleteComicChapterById,
   updateComicChapterById,
+  getNextChapterOf,
+  getPrevChapterOf,
 };

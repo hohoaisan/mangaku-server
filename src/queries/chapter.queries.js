@@ -4,7 +4,7 @@ const { Page, Image } = require('../models');
 
 const defaultScope = () => ({
   attributes: {
-    exclude: ['comicId', 'createdAt', 'deletedAt', 'updatedAt'],
+    exclude: ['comicId', 'deletedAt', 'updatedAt'],
   },
 });
 
@@ -29,7 +29,7 @@ const detail = () => ({
   ],
   order: [['pages', 'order', 'ASC']],
   attributes: {
-    exclude: ['createdAt', 'deletedAt', 'updatedAt'],
+    exclude: ['deletedAt', 'updatedAt'],
   },
 });
 
