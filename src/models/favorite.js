@@ -1,10 +1,11 @@
 const Sequelize = require('sequelize');
+const plugins = require('./plugins');
 
 class favorite extends Sequelize.Model {
   static init(sequelize, DataTypes) {
     super.init(
       {
-        comic: {
+        comicId: {
           type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true,
@@ -13,7 +14,7 @@ class favorite extends Sequelize.Model {
             key: 'id',
           },
         },
-        user: {
+        userId: {
           type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true,
@@ -37,7 +38,7 @@ class favorite extends Sequelize.Model {
           {
             name: 'favorite_pkey',
             unique: true,
-            fields: [{ name: 'comic' }, { name: 'user' }],
+            fields: [{ name: 'comicId' }, { name: 'userId' }],
           },
         ],
       }
@@ -45,5 +46,8 @@ class favorite extends Sequelize.Model {
     return favorite;
   }
 }
+
+// add plugin to model
+plugins.paginate(favorite);
 
 module.exports = favorite;

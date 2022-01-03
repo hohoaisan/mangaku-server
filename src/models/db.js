@@ -57,7 +57,7 @@ comic.belongsToMany(format, { as: 'formats', through: comicFormat, foreignKey: '
 comic.belongsToMany(genre, { as: 'genres', through: comicGenre, foreignKey: 'comicId', otherKey: 'genreId' });
 comic.belongsToMany(image, { as: 'covers', through: comicCover, foreignKey: 'comicId', otherKey: 'imageId' });
 comic.belongsToMany(user, { as: 'user_users', through: comment, foreignKey: 'comic', otherKey: 'user' });
-comic.belongsToMany(user, { as: 'user_user_favorites', through: favorite, foreignKey: 'comic', otherKey: 'user' });
+comic.belongsToMany(user, { as: 'user_user_favorites', through: favorite, foreignKey: 'comicId', otherKey: 'userId' });
 comic.belongsToMany(user, { as: 'user_user_reviews', through: review, foreignKey: 'comic', otherKey: 'user' });
 format.belongsToMany(comic, {
   as: 'comic_comic_comic_formats',
@@ -85,7 +85,7 @@ user.belongsToMany(chapter, {
   otherKey: 'chapter',
 });
 user.belongsToMany(comic, { as: 'comic_comic_comments', through: comment, foreignKey: 'user', otherKey: 'comic' });
-user.belongsToMany(comic, { as: 'comic_comic_favorites', through: favorite, foreignKey: 'user', otherKey: 'comic' });
+user.belongsToMany(comic, { as: 'comic_comic_favorites', through: favorite, foreignKey: 'userId', otherKey: 'comicId' });
 user.belongsToMany(comic, { as: 'comic_comic_reviews', through: review, foreignKey: 'user', otherKey: 'comic' });
 comicAuthor.belongsTo(author, { as: 'author_author', foreignKey: 'authorId' });
 author.hasMany(comicAuthor, { as: 'comic_authors', foreignKey: 'authorId' });
@@ -105,8 +105,8 @@ comicGenre.belongsTo(comic, { as: 'comic_comic', foreignKey: 'comicId' });
 comic.hasMany(comicGenre, { as: 'comic_genres', foreignKey: 'comicId' });
 comment.belongsTo(comic, { as: 'comic_comic', foreignKey: 'comic' });
 comic.hasMany(comment, { as: 'comments', foreignKey: 'comic' });
-favorite.belongsTo(comic, { as: 'comic_comic', foreignKey: 'comic' });
-comic.hasMany(favorite, { as: 'favorites', foreignKey: 'comic' });
+favorite.belongsTo(comic, { as: 'comic', foreignKey: 'comicId' });
+comic.hasMany(favorite, { as: 'favorites', foreignKey: 'comicId' });
 review.belongsTo(comic, { as: 'comic_comic', foreignKey: 'comic' });
 comic.hasMany(review, { as: 'reviews', foreignKey: 'comic' });
 comicFormat.belongsTo(format, { as: 'format_format', foreignKey: 'formatId' });
@@ -121,8 +121,8 @@ author.belongsTo(user, { as: 'user', foreignKey: 'userId' });
 user.hasMany(author, { as: 'authors', foreignKey: 'userId' });
 comment.belongsTo(user, { as: 'user_user', foreignKey: 'user' });
 user.hasMany(comment, { as: 'comments', foreignKey: 'user' });
-favorite.belongsTo(user, { as: 'user_user', foreignKey: 'user' });
-user.hasMany(favorite, { as: 'favorites', foreignKey: 'user' });
+favorite.belongsTo(user, { as: 'user_user', foreignKey: 'userId' });
+user.hasMany(favorite, { as: 'favorites', foreignKey: 'userId' });
 image.belongsTo(user, { as: 'uploader_user', foreignKey: 'uploader' });
 user.hasMany(image, { as: 'images', foreignKey: 'uploader' });
 readHistory.belongsTo(user, { as: 'user_user', foreignKey: 'user' });
@@ -145,7 +145,7 @@ module.exports = sequelize;
   // await comicFormat.sync({ force: true });
   // await comicGenre.sync({ force: true });
   //   await comment.sync({ alter: true, force: true });
-  //   await favorite.sync({ alter: true, force: true });
+  // await favorite.sync({ alter: true, force: true });
   //   await format.sync({ alter: true, force: true });
   //   await genre.sync({ alter: true, force: true });
   // await image.sync({ force: true });
