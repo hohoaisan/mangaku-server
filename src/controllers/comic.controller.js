@@ -29,8 +29,8 @@ const getComics = [
   catchAsync(async (req, res) => {
     const { scope, search } = pick(req.query, ['scope', 'search']);
     let options = pick(req.query, ['sortBy', 'page', 'limit']);
-    options = withSequelizeSearch(search, ['title', 'description'])(options);
     options = _.extend(options, comicQueries[scope]);
+    options = withSequelizeSearch(search, ['title', 'description'])(options);
     const result = await comicService.queryComics(options);
     if (result && result.data) {
       result.data = result.data.map((comic) => flatComic(comic, ['covers']));
@@ -45,7 +45,7 @@ const getComic = [
       manageDetail: ['manageComics'],
       detail: [],
     },
-    'detail'
+    'default'
   ),
   catchAsync(async (req, res) => {
     const { scope } = pick(req.query, ['scope']);

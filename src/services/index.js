@@ -8,3 +8,4 @@ module.exports.authorService = require('./author.service');
 module.exports.imageService = require('./image.service');
 module.exports.comicService = require('./comic.service');
 module.exports.chapterService = require('./chapter.service');
+module.exports.favoriteService = require('./favorite.service');

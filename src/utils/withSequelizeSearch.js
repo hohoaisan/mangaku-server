@@ -2,7 +2,7 @@ const { Op } = require('sequelize');
 
 const withSequelizeSearch =
   (query = null, field = []) =>
-  (options) => {
+  (options = {}) => {
     if (query && Array.isArray(field) && field.length) {
       const assignOpOr = [...field.map((value) => ({ [value]: { [Op.iLike]: `%${query}%` } }))];
       const newOptions = options;
