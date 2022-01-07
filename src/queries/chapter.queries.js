@@ -1,12 +1,26 @@
 const _ = require('lodash');
 const { Op } = require('sequelize');
-const { Page, Image } = require('../models');
+const { Page, Image, ReadHistory } = require('../models');
 
-const defaultScope = () => ({
-  attributes: {
-    exclude: ['comicId', 'deletedAt', 'updatedAt'],
-  },
-});
+const defaultScope = ({ historyUserId } = {}) => {
+  return {
+    attributes: {
+      exclude: ['comicId', 'deletedAt', 'updatedAt'],
+    },
+    ...(historyUserId && {
+      include: [
+        {
+          model: ReadHistory,
+          as: 'read_histories',
+          where: {
+            userId: historyUserId,
+          },
+          required: false,
+        },
+      ],
+    }),
+  };
+};
 
 const detail = () => ({
   include: [

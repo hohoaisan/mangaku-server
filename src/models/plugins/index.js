@@ -1,1 +1,7 @@
-module.exports.paginate = require('./paginate');
+const paginate = require('./paginate');
+const paginateCustom = require('./paginateCustom');
+
+module.exports = {
+  paginate,
+  paginateCustom,
+};
