@@ -49,8 +49,8 @@ chapter.belongsToMany(image, { as: 'image_image_pages', through: page, foreignKe
 chapter.belongsToMany(user, {
   as: 'user_user_read_histories',
   through: readHistory,
-  foreignKey: 'chapter',
-  otherKey: 'user',
+  foreignKey: 'chapterId',
+  otherKey: 'userId',
 });
 comic.belongsToMany(author, { as: 'authors', through: comicAuthor, foreignKey: 'comicId', otherKey: 'authorId' });
 comic.belongsToMany(format, { as: 'formats', through: comicFormat, foreignKey: 'comicId', otherKey: 'formatId' });
@@ -81,8 +81,8 @@ image.belongsToMany(comic, {
 user.belongsToMany(chapter, {
   as: 'chapter_chapter_read_histories',
   through: readHistory,
-  foreignKey: 'user',
-  otherKey: 'chapter',
+  foreignKey: 'userId',
+  otherKey: 'chapterId',
 });
 user.belongsToMany(comic, { as: 'comic_comic_comments', through: comment, foreignKey: 'user', otherKey: 'comic' });
 user.belongsToMany(comic, { as: 'comic_comic_favorites', through: favorite, foreignKey: 'userId', otherKey: 'comicId' });
@@ -91,9 +91,9 @@ comicAuthor.belongsTo(author, { as: 'author_author', foreignKey: 'authorId' });
 author.hasMany(comicAuthor, { as: 'comic_authors', foreignKey: 'authorId' });
 page.belongsTo(chapter, { as: 'chapter_chapter', foreignKey: 'chapterId' });
 chapter.hasMany(page, { as: 'pages', foreignKey: 'chapterId' });
-readHistory.belongsTo(chapter, { as: 'chapter_chapter', foreignKey: 'chapter' });
-chapter.hasMany(readHistory, { as: 'read_histories', foreignKey: 'chapter' });
-chapter.belongsTo(comic, { as: 'comic_comic', foreignKey: 'comicId' });
+readHistory.belongsTo(chapter, { as: 'chapter', foreignKey: 'chapterId' });
+chapter.hasMany(readHistory, { as: 'read_histories', foreignKey: 'chapterId' });
+chapter.belongsTo(comic, { as: 'comic', foreignKey: 'comicId' });
 comic.hasMany(chapter, { as: 'chapters', foreignKey: 'comicId' });
 comicAuthor.belongsTo(comic, { as: 'comic_comic', foreignKey: 'comicId' });
 comic.hasMany(comicAuthor, { as: 'comic_authors', foreignKey: 'comicId' });
@@ -125,8 +125,8 @@ favorite.belongsTo(user, { as: 'user_user', foreignKey: 'userId' });
 user.hasMany(favorite, { as: 'favorites', foreignKey: 'userId' });
 image.belongsTo(user, { as: 'uploader_user', foreignKey: 'uploader' });
 user.hasMany(image, { as: 'images', foreignKey: 'uploader' });
-readHistory.belongsTo(user, { as: 'user_user', foreignKey: 'user' });
-user.hasMany(readHistory, { as: 'read_histories', foreignKey: 'user' });
+readHistory.belongsTo(user, { as: 'user_user', foreignKey: 'userId' });
+user.hasMany(readHistory, { as: 'read_histories', foreignKey: 'userId' });
 review.belongsTo(user, { as: 'user_user', foreignKey: 'user' });
 user.hasMany(review, { as: 'reviews', foreignKey: 'user' });
 token.belongsTo(user, { as: 'user_user', foreignKey: 'user' });

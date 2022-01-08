@@ -162,10 +162,23 @@ const deleteComicById = async (comicId) => {
   return comic;
 };
 
+const increaseViewCount = async (comicId) => {
+  await Comic.increment(
+    { viewCount: 1 },
+    {
+      where: {
+        id: comicId,
+      },
+    }
+  );
+  return true;
+};
+
 module.exports = {
   createComic,
   queryComics,
   getComicById,
   updateComicById,
   deleteComicById,
+  increaseViewCount,
 };

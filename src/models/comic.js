@@ -39,6 +39,11 @@ class comic extends Sequelize.Model {
           allowNull: false,
           defaultValue: 0,
         },
+        viewCount: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          defaultValue: 0,
+        },
       },
       {
         sequelize,

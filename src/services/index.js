@@ -9,3 +9,4 @@ module.exports.imageService = require('./image.service');
 module.exports.comicService = require('./comic.service');
 module.exports.chapterService = require('./chapter.service');
 module.exports.favoriteService = require('./favorite.service');
+module.exports.historyService = require('./history.service');

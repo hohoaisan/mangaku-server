@@ -30,7 +30,23 @@ const flatChapterPage = (page, attributeToRemove = []) => {
 
   return flattenPage;
 };
+
+// {chaper} <Chapter>
+// options.attributeToRemove: String[]
+// options.lastedReadChaperId: String
+
+const flatChapter = (chapter, options = {}) => {
+  let flattenChapter = chapter.toJSON ? chapter.toJSON() : chapter;
+  if (flattenChapter.read_histories && flattenChapter.read_histories.length) {
+    const [firstItem] = flattenChapter.read_histories;
+    flattenChapter.lastRead = firstItem.lastRead;
+    flattenChapter.isLastedRead = options.lastedReadChaperId === flattenChapter.id;
+  }
+  flattenChapter = _.omit(flattenChapter, ['read_histories', ...(options.attributeToRemove || [])]);
+  return flattenChapter;
+};
 module.exports = {
   flatComic,
   flatChapterPage,
+  flatChapter,
 };

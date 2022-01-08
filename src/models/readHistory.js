@@ -1,10 +1,11 @@
 const Sequelize = require('sequelize');
+const plugins = require('./plugins');
 
 class readHistory extends Sequelize.Model {
   static init(sequelize, DataTypes) {
     super.init(
       {
-        chapter: {
+        chapterId: {
           type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true,
@@ -13,7 +14,7 @@ class readHistory extends Sequelize.Model {
             key: 'id',
           },
         },
-        user: {
+        userId: {
           type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true,
@@ -22,7 +23,7 @@ class readHistory extends Sequelize.Model {
             key: 'id',
           },
         },
-        lastread: {
+        lastRead: {
           type: DataTypes.DATE,
           allowNull: true,
           defaultValue: Sequelize.Sequelize.fn('now'),
@@ -37,7 +38,7 @@ class readHistory extends Sequelize.Model {
           {
             name: 'read_history_pkey',
             unique: true,
-            fields: [{ name: 'chapter' }, { name: 'user' }],
+            fields: [{ name: 'chapterId' }, { name: 'userId' }],
           },
         ],
       }
@@ -45,5 +46,7 @@ class readHistory extends Sequelize.Model {
     return readHistory;
   }
 }
+
+plugins.paginateCustom(readHistory);
 
 module.exports = readHistory;
