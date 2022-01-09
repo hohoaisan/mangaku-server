@@ -142,7 +142,7 @@ module.exports = sequelize;
   // await comicCover.sync({ force: true });
   // await comicFormat.sync({ force: true });
   // await comicGenre.sync({ force: true });
-  await comment.sync({ alter: true, force: true });
+  // await comment.sync({ alter: true, force: true });
   // await favorite.sync({ alter: true, force: true });
   //   await format.sync({ alter: true, force: true });
   //   await genre.sync({ alter: true, force: true });
