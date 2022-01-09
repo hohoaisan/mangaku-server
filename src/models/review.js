@@ -4,7 +4,7 @@ class review extends Sequelize.Model {
   static init(sequelize, DataTypes) {
     super.init(
       {
-        comic: {
+        comicId: {
           type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true,
@@ -13,7 +13,7 @@ class review extends Sequelize.Model {
             key: 'id',
           },
         },
-        user: {
+        userId: {
           type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true,
@@ -25,6 +25,11 @@ class review extends Sequelize.Model {
         rating: {
           type: DataTypes.SMALLINT,
           allowNull: false,
+          validate: {
+            isInt: true,
+            max: 5,
+            min: 1,
+          },
         },
         content: {
           type: DataTypes.STRING,
@@ -40,7 +45,7 @@ class review extends Sequelize.Model {
           {
             name: 'review_pkey',
             unique: true,
-            fields: [{ name: 'comic' }, { name: 'user' }],
+            fields: [{ name: 'comicId' }, { name: 'userId' }],
           },
         ],
       }
