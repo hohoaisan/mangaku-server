@@ -61,7 +61,10 @@ const getComicChapters = [
       case 'defaultScope':
         scopedQueries = chapterQueries[scope]({ historyUserId: userId });
         // eslint-disable-next-line no-case-declarations
-        const lastedRead = await historyService.getComicLastestRead(userId, comicId);
+        let lastedRead = null;
+        if (userId) {
+          lastedRead = await historyService.getComicLastestRead(userId, comicId);
+        }
         if (lastedRead && lastedRead.chapterId) {
           flatChaperOptions = {
             ...flatChaperOptions,
