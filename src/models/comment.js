@@ -1,4 +1,5 @@
 const Sequelize = require('sequelize');
+const plugins = require('./plugins');
 
 class comment extends Sequelize.Model {
   static init(sequelize, DataTypes) {
@@ -6,22 +7,21 @@ class comment extends Sequelize.Model {
       {
         id: {
           type: DataTypes.UUID,
-          allowNull: true,
-          defaultValue: DataTypes.UUIDV4,
-        },
-        comic: {
-          type: DataTypes.UUID,
           allowNull: false,
           primaryKey: true,
+          defaultValue: DataTypes.UUIDV4,
+        },
+        comicId: {
+          type: DataTypes.UUID,
+          allowNull: false,
           references: {
             model: 'comic',
             key: 'id',
           },
         },
-        user: {
+        userId: {
           type: DataTypes.UUID,
           allowNull: false,
-          primaryKey: true,
           references: {
             model: 'user',
             key: 'id',
@@ -29,7 +29,7 @@ class comment extends Sequelize.Model {
         },
         content: {
           type: DataTypes.STRING,
-          allowNull: true,
+          allowNull: false,
         },
       },
       {
@@ -39,9 +39,13 @@ class comment extends Sequelize.Model {
         timestamps: true,
         indexes: [
           {
+            name: 'comment_indexes',
+            fields: [{ name: 'id' }, { name: 'comicId' }, { name: 'userId' }],
+          },
+          {
             name: 'comment_pkey',
             unique: true,
-            fields: [{ name: 'comic' }, { name: 'user' }],
+            fields: [{ name: 'id' }],
           },
         ],
       }
@@ -49,5 +53,7 @@ class comment extends Sequelize.Model {
     return comment;
   }
 }
+
+plugins.paginate(comment);
 
 module.exports = comment;
