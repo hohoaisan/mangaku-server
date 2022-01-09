@@ -1,7 +1,7 @@
 const express = require('express');
 const validate = require('../../middlewares/validate');
-const { comicValidation, chapterValidation, commentValidation } = require('../../validations');
-const { comicController, chapterController, commentController } = require('../../controllers');
+const { comicValidation, chapterValidation, commentValidation, reviewValidation } = require('../../validations');
+const { comicController, chapterController, commentController, reviewController } = require('../../controllers');
 const auth = require('../../middlewares/auth');
 
 const router = express.Router();
@@ -38,5 +38,13 @@ router
   .get(commentController.getComment)
   .patch(auth(), validate(commentValidation.updateComment), commentController.updateComment)
   .delete(auth(), validate(commentValidation.deleteComment), commentController.deleteComment);
+
+router.route('/:comicId/reviews').post(auth(), validate(reviewValidation.createReview), reviewController.createReview);
+
+router
+  .route('/:comicId/reviews/:userId')
+  .get(reviewController.getReview)
+  .patch(auth(), validate(reviewValidation.updateReview), reviewController.updateReview)
+  .delete(auth(), validate(reviewValidation.deleteReview), reviewController.deleteReview);
 
 module.exports = router;
