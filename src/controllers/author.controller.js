@@ -37,7 +37,7 @@ const getAuthor = catchAsync(async (req, res) => {
 });
 
 const updateAuthor = catchAsync(async (req, res) => {
-  const updateBody = pick(req.body, ['name', 'description', 'restricted']);
+  const updateBody = pick(req.body, ['name', 'description', 'restricted', 'approval_status']);
   const updateOptions = pick(req.body, ['restore']);
   const currentAuthor = await authorService.getAuthorById(req.params.authorId);
   if (!currentAuthor) {

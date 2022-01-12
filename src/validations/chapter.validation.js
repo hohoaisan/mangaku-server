@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { statuses } = require('../constraints/approvalStatus');
 const { UUIDV4 } = require('./custom.validation');
 
 const createChapter = {
@@ -49,6 +50,9 @@ const updateChapter = {
     number: Joi.number().min(0),
     name: Joi.string(),
     volume: Joi.number().min(1),
+    approval_status: Joi.string()
+      .allow(null)
+      .valid(...statuses, null),
     pages: Joi.array().items(
       Joi.object().keys({
         imageId: Joi.string().required().custom(UUIDV4),

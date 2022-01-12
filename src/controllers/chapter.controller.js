@@ -48,6 +48,9 @@ const getComicChapters = [
   matchScope({
     manageVisible: ['manageComics'],
     manageDeleted: ['manageComics'],
+    managePending: ['manageComics'],
+    manageApproved: ['manageComics'],
+    manageRejected: ['manageComics'],
   }),
   catchAsync(async (req, res) => {
     const userId = req.user ? req.user.id : null;

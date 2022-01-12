@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { statuses } = require('../constraints/approvalStatus');
 const { UUIDV4 } = require('./custom.validation');
 
 const createComic = {
@@ -70,6 +71,9 @@ const updateComic = {
   body: Joi.object().keys({
     title: Joi.string(),
     description: Joi.string(),
+    approval_status: Joi.string()
+      .allow(null)
+      .valid(...statuses, null),
     restore: Joi.string().allow(true),
     comic_authors: Joi.array().items(
       Joi.object().keys({
