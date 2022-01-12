@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { roles } = require('../config/roles');
 const { password, UUIDV4 } = require('./custom.validation');
 
 const createUser = {
@@ -37,6 +38,9 @@ const updateUser = {
       email: Joi.string().email(),
       password: Joi.string().custom(password),
       name: Joi.string(),
+      role: Joi.string()
+        .allow(null)
+        .valid(...roles),
       banned: Joi.boolean(),
       emailVerified: Joi.boolean(),
       restore: Joi.string().allow(true),
