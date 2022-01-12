@@ -86,7 +86,7 @@ const queryHistories = async (userId, options) => {
       },
     ],
   };
-  return ReadHistory.paginate(detailOptions, countQuery);
+  return ReadHistory.customPaginate(detailOptions, countQuery);
 };
 
 const getComicLastestRead = (userId, comicId) => {
