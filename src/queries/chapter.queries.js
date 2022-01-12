@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const { Op } = require('sequelize');
+const { status } = require('../constraints/approvalStatus');
 const { Page, Image, ReadHistory } = require('../models');
 
 const defaultScope = ({ historyUserId } = {}) => {
@@ -58,6 +59,29 @@ const manageAll = () => ({
 
 const manageVisible = () => ({
   paranoid: true,
+  where: {
+    [Op.or]: [{ approval_status: null }, { approval_status: status.APPROVED }],
+  },
+});
+const managePending = () => ({
+  paranoid: true,
+  where: {
+    approval_status: status.PENDING,
+  },
+});
+
+const manageRejected = () => ({
+  paranoid: true,
+  where: {
+    approval_status: status.REJECTED,
+  },
+});
+
+const manageApproved = () => ({
+  paranoid: true,
+  where: {
+    approval_status: status.APPROVED,
+  },
 });
 
 const manageDeleted = () => ({
@@ -74,4 +98,7 @@ module.exports = {
   manageAll,
   manageVisible,
   manageDeleted,
+  managePending,
+  manageRejected,
+  manageApproved,
 };

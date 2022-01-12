@@ -7,3 +7,7 @@ module.exports.chapterController = require('./chapter.controller');
 module.exports.historyController = require('./history.controller');
 module.exports.commentController = require('./comment.controller');
 module.exports.reviewController = require('./review.controller');
+module.exports.profileController = require('./profile.controller');
+module.exports.authorController = require('./author.controller');
+module.exports.comicAuthorController = require('./comicAuthor.controller');
+module.exports.chapterAuthorController = require('./chapterAuthor.controller');

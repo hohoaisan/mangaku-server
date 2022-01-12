@@ -9,6 +9,7 @@ const imageRoute = require('./image.route');
 const comicRoute = require('./comic.route');
 const historyRoute = require('./readHistory.route');
 const favoriteRoute = require('./favorite.route');
+const userAuthorRoute = require('./userAuthor.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 
@@ -42,6 +43,10 @@ const defaultRoutes = [
   {
     path: '/authors',
     route: authorRoute,
+  },
+  {
+    path: '/author',
+    route: userAuthorRoute,
   },
   {
     path: '/images',
