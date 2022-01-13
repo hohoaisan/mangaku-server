@@ -33,7 +33,7 @@ class chapter extends Sequelize.Model {
           allowNull: true,
           defaultValue: null,
           validate: {
-            isIn: statuses,
+            isIn: [statuses],
           },
         },
         numPages: {

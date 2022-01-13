@@ -26,7 +26,7 @@ class comic extends Sequelize.Model {
           allowNull: true,
           defaultValue: null,
           validate: {
-            isIn: statuses,
+            isIn: [statuses],
           },
         },
         rating: {
@@ -65,5 +65,6 @@ class comic extends Sequelize.Model {
 }
 
 plugins.paginate(comic);
+plugins.paginateCustom(comic);
 
 module.exports = comic;

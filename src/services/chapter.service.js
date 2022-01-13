@@ -52,7 +52,13 @@ const queryComicChapters = async (comicId, options) => {
           ['volume', 'DESC'],
         ],
       },
-      options
+      {
+        ...options,
+        where: {
+          comicId,
+          ...options.where,
+        },
+      }
     )
   );
   return result;
@@ -68,7 +74,7 @@ const deleteComicChapterById = async (comicId, chapterId) => {
 };
 
 const updateComicChapterById = async (comicId, chapterId, updateBody, options) => {
-  const chapterBody = _.pick(updateBody, ['number', 'name', 'volume']);
+  const chapterBody = _.pick(updateBody, ['number', 'name', 'volume', 'approval_status']);
   const chapter = await getChapterByIdAndComicId(chapterId, comicId, options);
   if (!chapter) {
     throw new Error('Chapter not found or has been deleted');

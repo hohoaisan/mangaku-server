@@ -1,4 +1,5 @@
 const Joi = require('joi');
+const { statuses } = require('../constraints/approvalStatus');
 const { UUIDV4 } = require('./custom.validation');
 
 const createAuthor = {
@@ -34,6 +35,9 @@ const updateAuthor = {
       description: Joi.string().allow(''),
       restricted: Joi.boolean().allow(null),
       restore: Joi.string().allow(true),
+      approval_status: Joi.string()
+        .allow(null)
+        .valid(...statuses, null),
     })
     .min(1),
 };

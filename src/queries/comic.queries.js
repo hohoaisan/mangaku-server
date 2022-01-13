@@ -1,4 +1,5 @@
 const { Op } = require('sequelize');
+const { status } = require('../constraints/approvalStatus');
 
 module.exports = {
   default: {
@@ -140,6 +141,10 @@ module.exports = {
     ],
   },
   manageVisible: {
+    where: {
+      [Op.or]: [{ approval_status: status.APPROVED }, { approval_status: null }],
+      deletedAt: null,
+    },
     include: [
       {
         association: 'authors',
@@ -163,6 +168,84 @@ module.exports = {
   manageDeleted: {
     where: {
       deletedAt: { [Op.not]: null },
+    },
+    paranoid: false,
+    include: [
+      {
+        association: 'authors',
+        attributes: ['id', 'name'],
+        through: {
+          attributes: [],
+        },
+      },
+      {
+        association: 'covers',
+        attributes: ['id', 'url'],
+        through: {
+          where: {
+            default: true,
+          },
+          attributes: ['default'],
+        },
+      },
+    ],
+  },
+  managePending: {
+    where: {
+      approval_status: status.PENDING,
+      deletedAt: null,
+    },
+    paranoid: false,
+    include: [
+      {
+        association: 'authors',
+        attributes: ['id', 'name'],
+        through: {
+          attributes: [],
+        },
+      },
+      {
+        association: 'covers',
+        attributes: ['id', 'url'],
+        through: {
+          where: {
+            default: true,
+          },
+          attributes: ['default'],
+        },
+      },
+    ],
+  },
+  manageApproved: {
+    where: {
+      approval_status: status.APPROVED,
+      deletedAt: null,
+    },
+    paranoid: false,
+    include: [
+      {
+        association: 'authors',
+        attributes: ['id', 'name'],
+        through: {
+          attributes: [],
+        },
+      },
+      {
+        association: 'covers',
+        attributes: ['id', 'url'],
+        through: {
+          where: {
+            default: true,
+          },
+          attributes: ['default'],
+        },
+      },
+    ],
+  },
+  manageRejected: {
+    where: {
+      approval_status: status.REJECTED,
+      deletedAt: null,
     },
     paranoid: false,
     include: [

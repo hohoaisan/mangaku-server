@@ -35,7 +35,7 @@ class User extends Sequelize.Model {
           allowNull: false,
           defaultValue: 'user',
           validate: {
-            isIn: roles,
+            isIn: [roles],
           },
         },
         emailVerified: {

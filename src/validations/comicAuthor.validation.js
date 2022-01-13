@@ -1,18 +1,10 @@
 const Joi = require('joi');
-const { statuses } = require('../constraints/approvalStatus');
 const { UUIDV4 } = require('./custom.validation');
 
 const createComic = {
   body: Joi.object().keys({
     title: Joi.string().required(),
     description: Joi.string().required(),
-    comic_authors: Joi.array()
-      .required()
-      .items(
-        Joi.object().keys({
-          authorId: Joi.string().custom(UUIDV4),
-        })
-      ),
     comic_covers: Joi.array()
       .required()
       .items(
@@ -45,25 +37,6 @@ const createComic = {
   }),
 };
 
-const getComics = {
-  query: Joi.object().keys({
-    search: Joi.string().allow('', null),
-    scope: Joi.string().allow('', null),
-    sortBy: Joi.string(),
-    page: Joi.number().min(1),
-    limit: Joi.number().min(1),
-  }),
-};
-
-const getComic = {
-  query: Joi.object().keys({
-    scope: Joi.string().allow('', null),
-  }),
-  params: Joi.object().keys({
-    comicId: Joi.string().custom(UUIDV4),
-  }),
-};
-
 const updateComic = {
   params: Joi.object().keys({
     comicId: Joi.required().custom(UUIDV4),
@@ -71,10 +44,6 @@ const updateComic = {
   body: Joi.object().keys({
     title: Joi.string(),
     description: Joi.string(),
-    approval_status: Joi.string()
-      .allow(null)
-      .valid(...statuses, null),
-    restore: Joi.string().allow(true),
     comic_authors: Joi.array().items(
       Joi.object().keys({
         authorId: Joi.string().custom(UUIDV4),
@@ -107,16 +76,7 @@ const updateComic = {
   }),
 };
 
-const deleteComic = {
-  params: Joi.object().keys({
-    comicId: Joi.string().custom(UUIDV4),
-  }),
-};
-
 module.exports = {
   createComic,
-  getComics,
-  getComic,
   updateComic,
-  deleteComic,
 };

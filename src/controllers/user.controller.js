@@ -31,7 +31,7 @@ const getUser = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
-  const updateBody = pick(req.body, ['name', 'email', 'password', 'banned', 'emailVerified']);
+  const updateBody = pick(req.body, ['name', 'email', 'password', 'banned', 'emailVerified', 'role']);
   const updateOptions = pick(req.body, ['restore']);
   const currentUser = await userService.getUserById(req.params.userId, 'all');
   if (!currentUser) {

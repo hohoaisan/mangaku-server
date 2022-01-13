@@ -35,7 +35,7 @@ class author extends Sequelize.Model {
           allowNull: true,
           defaultValue: null,
           validate: {
-            isIn: statuses,
+            isIn: [statuses],
           },
         },
         restricted: {

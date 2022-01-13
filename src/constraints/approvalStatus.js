@@ -1,10 +1,10 @@
 const allStatus = {
-  pending: 'PENDING',
-  approved: 'APPROVED',
-  rejected: 'REJECTED',
+  PENDING: 'pending',
+  APPROVED: 'approved',
+  REJECTED: 'rejected',
 };
 
-const statuses = Object.keys(allStatus);
+const statuses = Object.values(allStatus);
 
 module.exports = {
   statuses,

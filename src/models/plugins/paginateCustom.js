@@ -74,7 +74,7 @@ const paginate = (Model) => {
   };
   const instanceOrModel = Model.Instance || Model;
   // @ts-ignore
-  instanceOrModel.paginate = pagination;
+  instanceOrModel.customPaginate = pagination;
 };
 
 module.exports = paginate;

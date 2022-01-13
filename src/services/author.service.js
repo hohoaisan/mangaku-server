@@ -12,6 +12,15 @@ const getAuthorById = async (id, scope = 'all') => {
   return ScopedAuthor.findByPk(id);
 };
 
+const getAuthorByUserId = async (userId, scope = 'all') => {
+  const ScopedAuthor = Author.scope(scope);
+  return ScopedAuthor.findOne({
+    where: {
+      userId,
+    },
+  });
+};
+
 /**
  * Create a author
  * @param {Object} authorBody
@@ -69,4 +78,5 @@ module.exports = {
   getAuthorById,
   updateAuthorById,
   deleteAuthorById,
+  getAuthorByUserId,
 };

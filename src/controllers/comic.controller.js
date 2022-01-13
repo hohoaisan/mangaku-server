@@ -6,7 +6,6 @@ const catchAsync = require('../utils/catchAsync');
 const withSequelizeSearch = require('../utils/withSequelizeSearch');
 const pick = require('../utils/pick');
 const { comicService } = require('../services');
-// const mapRole = require('../../middlewares/mapRole');
 const matchScope = require('../middlewares/matchScope');
 
 const { flatComic } = require('./helpers');
@@ -22,7 +21,10 @@ const getComics = [
   matchScope(
     {
       manageVisible: ['manageComics'],
+      managePending: ['manageComics'],
+      manageApproved: ['manageComics'],
       manageDeleted: ['manageComics'],
+      manageRejected: ['manageComics'],
     },
     'default'
   ),

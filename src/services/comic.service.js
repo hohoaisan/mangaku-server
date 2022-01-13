@@ -57,13 +57,32 @@ const queryComics = async (options) => {
 };
 
 /**
+ * Query for comics
+ * @returns {Promise<QueryResult>}
+ */
+const customQueryComics = async (options, paginationOptions) => {
+  const result = await Comic.customPaginate(paginationOptions);
+  const detailOptions = {
+    where: {
+      id: { [Op.in]: result.data.map((comic) => comic.id) },
+    },
+    paranoid: false,
+    order: options.sortBy ? sortByConvert(options.sortBy) : [['createdAt', 'ASC']],
+    ..._.pick(options, ['include', 'attributes']),
+  };
+  const comics = await Comic.findAll(detailOptions);
+  result.data = comics;
+  return result;
+};
+
+/**
  * Update comic by id
  * @param {ObjectId} comicId
  * @param {Object} updateBody
  * @returns {Promise<Comic>}
  */
 const updateComicById = async (comicId, updateBody, options) => {
-  const comicBody = pick(updateBody, ['title', 'description']);
+  const comicBody = pick(updateBody, ['title', 'description', 'approval_status']);
   const t = pick(updateBody, ['comic_authors', 'comic_genres', 'comic_formats', 'comic_covers']);
   const comic = await getComicById(comicId, options);
   if (!comic) return null;
@@ -174,6 +193,13 @@ const increaseViewCount = async (comicId) => {
   return true;
 };
 
+const getComicByAuthor = async (comicId, authorId) => {
+  return ComicAuthor.findOne({
+    comicId,
+    authorId,
+  });
+};
+
 module.exports = {
   createComic,
   queryComics,
@@ -181,4 +207,6 @@ module.exports = {
   updateComicById,
   deleteComicById,
   increaseViewCount,
+  customQueryComics,
+  getComicByAuthor,
 };
