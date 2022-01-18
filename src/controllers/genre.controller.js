@@ -4,11 +4,16 @@ const catchAsync = require('../utils/catchAsync');
 const withSequelizeSearch = require('../utils/withSequelizeSearch');
 const pick = require('../utils/pick');
 const { genreService } = require('../services');
+const strings = require('../constraints/strings');
+
+const {
+  genre: { errors },
+} = strings;
 
 const createGenre = catchAsync(async (req, res) => {
   const existingGenre = await genreService.getGenreByKey(req.body.key);
   if (existingGenre) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Genre key has already existed');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.keyExist);
   }
   const genre = await genreService.createGenre(req.body);
   res.status(httpStatus.CREATED).send(genre);
@@ -23,7 +28,7 @@ const getGenres = catchAsync(async (req, res) => {
 const getGenre = catchAsync(async (req, res) => {
   const genre = await genreService.getGenreById(req.params.genreId);
   if (!genre) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Genre not found');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   res.send(genre);
 });
@@ -31,11 +36,11 @@ const getGenre = catchAsync(async (req, res) => {
 const updateGenre = catchAsync(async (req, res) => {
   const currentGenre = await genreService.getGenreById(req.params.genreId);
   if (!currentGenre) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Genre not found');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   const existingGenre = await genreService.getGenreByKey(req.body.key, { excludeKey: currentGenre.key });
   if (existingGenre) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Genre key has already existed');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.keyExist);
   }
   const genre = await currentGenre.update(req.body);
   res.send(genre);

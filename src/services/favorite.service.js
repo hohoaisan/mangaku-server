@@ -6,7 +6,11 @@ const ApiError = require('../utils/ApiError');
 const comicQuery = require('../queries/comic.queries');
 const withSequelizeSearch = require('../utils/withSequelizeSearch');
 const sortByConvert = require('../utils/sortByConvert');
+const strings = require('../constraints/strings');
 
+const {
+  favorite: { errors },
+} = strings;
 /**
  * Get favorite by id
  * @param {ObjectId} id
@@ -94,7 +98,7 @@ const queryFavorites = async (userId, options) => {
 const deleteFavorite = async (userId, comicId) => {
   const favorite = await getFavorite(userId, comicId);
   if (!favorite) {
-    throw new ApiError(httpStatus.BAD_REQUEST, `This comic haven't in favorites list yet`);
+    throw new ApiError(httpStatus.BAD_REQUEST, errors.notFavorited);
   }
   await favorite.destroy();
   return favorite;

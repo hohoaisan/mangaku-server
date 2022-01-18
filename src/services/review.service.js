@@ -1,6 +1,11 @@
 const httpStatus = require('http-status');
 const { Review } = require('../models');
 const ApiError = require('../utils/ApiError');
+const strings = require('../constraints/strings');
+
+const {
+  review: { errors },
+} = strings;
 
 const getReviewById = async (comicId, userId) => {
   return Review.findOne({
@@ -28,7 +33,7 @@ const createReview = async (reviewBody) => {
 const updateReviewById = async (comicId, userId, updateBody) => {
   const review = await getReviewById(comicId, userId);
   if (!review) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Review not found or had been deleted');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   review.set(updateBody);
   await review.save();
@@ -43,7 +48,7 @@ const updateReviewById = async (comicId, userId, updateBody) => {
 const deleteReviewById = async (comicId, userId) => {
   const review = await getReviewById(comicId, userId);
   if (!review) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Review not found or had been deleted');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   await review.destroy();
   return review;

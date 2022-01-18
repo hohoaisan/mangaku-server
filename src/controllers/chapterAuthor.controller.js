@@ -9,6 +9,11 @@ const matchScope = require('../middlewares/matchScope');
 
 const { flatChapterPage, flatChapter } = require('./helpers');
 const { status } = require('../constraints/approvalStatus');
+const strings = require('../constraints/strings');
+
+const {
+  chapter: { errors },
+} = strings;
 
 const createComicChapter = catchAsync(async (req, res) => {
   const { comicId } = req.params;
@@ -31,7 +36,7 @@ const getComicChapter = [
     const options = chapterQueries[scope]();
     let chapter = await chapterService.getChapterByIdAndComicId(chapterId, comicId, options);
     if (!chapter) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Chapter not found or had been deleted');
+      throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
     }
     chapter = chapter.toJSON();
     if (chapter && chapter.pages) {
@@ -72,7 +77,7 @@ const updateComicChapter = catchAsync(async (req, res) => {
   const queryOptions = chapterQueries.manageAll();
   const chapter = await chapterService.updateComicChapterById(comicId, chapterId, req.body, queryOptions);
   if (!chapter) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Chapter not found or had been deleted');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   res.send(chapter);
 });

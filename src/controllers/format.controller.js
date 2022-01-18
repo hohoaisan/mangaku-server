@@ -4,11 +4,16 @@ const catchAsync = require('../utils/catchAsync');
 const withSequelizeSearch = require('../utils/withSequelizeSearch');
 const pick = require('../utils/pick');
 const { formatService } = require('../services');
+const strings = require('../constraints/strings');
+
+const {
+  format: { errors },
+} = strings;
 
 const createFormat = catchAsync(async (req, res) => {
   const existingFormat = await formatService.getFormatByKey(req.body.key);
   if (existingFormat) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Format key has already existed');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.keyExist);
   }
   const format = await formatService.createFormat(req.body);
   res.status(httpStatus.CREATED).send(format);
@@ -23,7 +28,7 @@ const getFormats = catchAsync(async (req, res) => {
 const getFormat = catchAsync(async (req, res) => {
   const format = await formatService.getFormatById(req.params.formatId);
   if (!format) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Format not found');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   res.send(format);
 });
@@ -31,11 +36,11 @@ const getFormat = catchAsync(async (req, res) => {
 const updateFormat = catchAsync(async (req, res) => {
   const currentFormat = await formatService.getFormatById(req.params.formatId);
   if (!currentFormat) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Format not found');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   const existingFormat = await formatService.getFormatByKey(req.body.key, { excludeKey: currentFormat.key });
   if (existingFormat) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Format key has already existed');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.keyExist);
   }
   const format = await currentFormat.update(req.body);
   res.send(format);

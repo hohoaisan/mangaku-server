@@ -5,6 +5,12 @@ const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
 const { Token } = require('../models');
 const pick = require('../utils/pick');
+const strings = require('../constraints/strings');
+
+const {
+  common: { errors: commonErrorsStrings },
+  auth: { errors },
+} = strings;
 /**
  * Login with username and password
  * @param {string} email
@@ -15,7 +21,7 @@ const loginUserWithEmailAndPassword = async (email, password) => {
   const options = { attributes: { include: ['password'] } };
   const user = await userService.getUserByEmail(email, options);
   if (!user || !(await user.isPasswordMatch(password))) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Incorrect email or password');
+    throw new ApiError(httpStatus.UNAUTHORIZED, errors.incorrectAuth);
   }
   return pick(user.toJSON(), ['id', 'name', 'email', 'role', 'emailverified']);
 };
@@ -30,7 +36,7 @@ const logout = async (refreshToken) => {
     where: { token: refreshToken, type: tokenTypes.REFRESH, blacklisted: false },
   });
   if (!refreshTokenDoc) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Not found');
+    throw new ApiError(httpStatus.NOT_FOUND, commonErrorsStrings.notFound);
   }
   await refreshTokenDoc.destroy();
 };
@@ -50,7 +56,7 @@ const refreshAuth = async (refreshToken) => {
     }
     return tokenService.generateAuthTokens(user);
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate');
+    throw new ApiError(httpStatus.UNAUTHORIZED, errors.unauthorized);
   }
 };
 
@@ -70,7 +76,7 @@ const resetPassword = async (resetPasswordToken, newPassword) => {
     await userService.updateUserById(user.id, { password: newPassword });
     await Token.destroy({ where: { user: user.id, type: tokenTypes.RESET_PASSWORD } });
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Password reset failed');
+    throw new ApiError(httpStatus.UNAUTHORIZED, errors.passwordResetFailed);
   }
 };
 
@@ -89,7 +95,7 @@ const verifyEmail = async (verifyEmailToken) => {
     await Token.destroy({ where: { user: user.id, type: tokenTypes.VERIFY_EMAIL } });
     await userService.updateUserById(user.id, { emailverified: true });
   } catch (error) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Email verification failed');
+    throw new ApiError(httpStatus.UNAUTHORIZED, errors.emailVerifyFailed);
   }
 };
 

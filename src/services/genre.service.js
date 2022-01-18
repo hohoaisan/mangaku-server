@@ -2,6 +2,11 @@ const httpStatus = require('http-status');
 const { Op } = require('sequelize');
 const { Genre } = require('../models');
 const ApiError = require('../utils/ApiError');
+const strings = require('../constraints/strings');
+
+const {
+  genre: { errors },
+} = strings;
 /**
  * Get genre by id
  * @param {ObjectId} id
@@ -53,7 +58,7 @@ const queryGenres = async (options) => {
 const updateGenreById = async (genreId, updateBody) => {
   const genre = await getGenreById(genreId);
   if (!genre) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Genre not found or had been deleted');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   genre.set(updateBody);
   await genre.save();
@@ -68,7 +73,7 @@ const updateGenreById = async (genreId, updateBody) => {
 const deleteGenreById = async (genreId) => {
   const genre = await getGenreById(genreId);
   if (!genre) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Genre not found or had been deleted');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   await genre.destroy();
   return genre;

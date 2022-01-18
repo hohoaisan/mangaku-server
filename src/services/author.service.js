@@ -2,6 +2,11 @@ const httpStatus = require('http-status');
 // const { Op } = require('sequelize');
 const { Author } = require('../models');
 const ApiError = require('../utils/ApiError');
+const strings = require('../constraints/strings');
+
+const {
+  author: { errors },
+} = strings;
 /**
  * Get author by id
  * @param {ObjectId} id
@@ -51,7 +56,7 @@ const queryAuthors = async (options, scope) => {
 const updateAuthorById = async (authorId, updateBody) => {
   const author = await getAuthorById(authorId);
   if (!author) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Author not found or had been deleted');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   author.set(updateBody);
   await author.save();
@@ -66,7 +71,7 @@ const updateAuthorById = async (authorId, updateBody) => {
 const deleteAuthorById = async (authorId) => {
   const author = await getAuthorById(authorId);
   if (!author) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Author not found or had been deleted');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   await author.destroy();
   return author;

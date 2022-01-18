@@ -3,12 +3,17 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { commentService } = require('../services');
+const strings = require('../constraints/strings');
+
+const {
+  comment: { errors },
+} = strings;
 
 const getComment = catchAsync(async (req, res) => {
   const { comicId, commentId } = req.params;
   const comment = await commentService.getCommentByIds({ id: commentId, comicId });
   if (!comment) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Comment not found');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   res.send(comment);
 });
@@ -35,7 +40,7 @@ const deleteComment = catchAsync(async (req, res) => {
     userId,
   });
   if (!comment) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Comment not found or you don't have permission to do that");
+    throw new ApiError(httpStatus.BAD_REQUEST, errors.notFound);
   }
   await commentService.deleteCommentById(comment.id);
   res.status(httpStatus.NO_CONTENT).send();
@@ -50,7 +55,7 @@ const updateComment = catchAsync(async (req, res) => {
     userId,
   });
   if (!comment) {
-    throw new ApiError(httpStatus.BAD_REQUEST, "Comment not found or you don't have permission to do that");
+    throw new ApiError(httpStatus.BAD_REQUEST, errors.notFound);
   }
   const updateBody = {
     content: req.body.content,
