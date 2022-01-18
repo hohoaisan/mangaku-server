@@ -2,16 +2,21 @@ const passport = require('passport');
 const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const { roleRights } = require('../config/roles');
+const strings = require('../constraints/strings');
+
+const {
+  auth: { errors },
+} = strings;
 
 const verifyCallback = (req, resolve, reject, requiredRights, options) => async (err, user, info) => {
   const { anonymous } = options;
 
   if (info && info.constructor.name === 'TokenExpiredError') {
-    return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Token expired'));
+    return reject(new ApiError(httpStatus.UNAUTHORIZED, errors.tokenExpired));
   }
 
   if (!anonymous && (err || info || !user)) {
-    return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
+    return reject(new ApiError(httpStatus.UNAUTHORIZED, errors.unauthorized));
   }
 
   req.user = user;

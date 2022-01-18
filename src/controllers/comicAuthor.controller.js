@@ -13,21 +13,28 @@ const matchScope = require('../middlewares/matchScope');
 const { flatComic } = require('./helpers');
 
 const comicQueries = require('../queries/comic.queries');
+const strings = require('../constraints/strings');
+
+const {
+  common: { errors: commonErrors },
+  author: { errors: authorErrors },
+  comic: { errors },
+} = strings;
 
 const checkUserAuthor = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
   if (req.user.role !== enumRole.AUTHOR) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Must be an author to do that');
+    throw new ApiError(httpStatus.BAD_REQUEST, authorErrors.mustBeAuthor);
   }
   const author = await authorService.getAuthorByUserId(userId);
   if (!author) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Must be an author to do that');
+    throw new ApiError(httpStatus.BAD_REQUEST, authorErrors.mustBeAuthor);
   }
   if (!author.approval_status === status.APPROVED) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'Must be an approved author to do that');
+    throw new ApiError(httpStatus.BAD_REQUEST, authorErrors.mustBeAuthor);
   }
   if (author.restricted) {
-    throw new ApiError(httpStatus.BAD_REQUEST, 'You are restricted');
+    throw new ApiError(httpStatus.BAD_REQUEST, authorErrors.restricted);
   }
   res.author = author;
   next();
@@ -101,7 +108,7 @@ const getComic = [
     const { scope } = pick(req.query, ['scope']);
     const comic = await comicService.getComicById(req.params.comicId, comicQueries[scope]);
     if (!comic) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Comic not found or had been deleted');
+      throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
     }
     res.send(flatComic(comic));
   }),
@@ -121,7 +128,7 @@ const updateComic = [
     };
     const comic = await comicService.updateComicById(req.params.comicId, updateBody, queryOptions);
     if (!comic) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Comic not found or had been deleted');
+      throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
     }
     res.send(flatComic(comic));
   }),
@@ -133,7 +140,7 @@ const deleteComic = [
     const { comicId, authorId } = req.params;
     const comicAuthor = comicService.getComicByAuthor(comicId, authorId);
     if (!comicAuthor) {
-      throw new ApiError(httpStatus.BAD_REQUEST, "You don't have permission to do that");
+      throw new ApiError(httpStatus.BAD_REQUEST, commonErrors.noPerm);
     }
     await comicService.deleteComicById(comicId);
     res.status(httpStatus.NO_CONTENT).send();

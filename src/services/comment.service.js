@@ -2,6 +2,11 @@ const httpStatus = require('http-status');
 const _ = require('lodash');
 const { Comment, User } = require('../models');
 const ApiError = require('../utils/ApiError');
+const strings = require('../constraints/strings');
+
+const {
+  comment: { errors },
+} = strings;
 /**
  * Get comment by id
  * @param {ObjectId} id
@@ -64,7 +69,7 @@ const queryComments = async (comicId, options) => {
 const updateCommentById = async (commentId, updateBody) => {
   const comment = await getCommentById(commentId);
   if (!comment) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Comment not found or had been deleted');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   comment.set(updateBody);
   await comment.save();
@@ -79,7 +84,7 @@ const updateCommentById = async (commentId, updateBody) => {
 const deleteCommentById = async (commentId) => {
   const comment = await getCommentById(commentId);
   if (!comment) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Comment not found or had been deleted');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   await comment.destroy();
   return comment;

@@ -8,6 +8,11 @@ const { Comic, ComicAuthor, ComicGenre, ComicFormat, ComicCover } = require('../
 const pick = require('../utils/pick');
 const sortByConvert = require('../utils/sortByConvert');
 const ApiError = require('../utils/ApiError');
+const strings = require('../constraints/strings');
+
+const {
+  comic: { errors },
+} = strings;
 /**
  * Get comic by id
  * @param {ObjectId} id
@@ -175,7 +180,7 @@ const updateComicById = async (comicId, updateBody, options) => {
 const deleteComicById = async (comicId) => {
   const comic = await getComicById(comicId);
   if (!comic) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Comic not found or had been deleted');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   await comic.destroy();
   return comic;

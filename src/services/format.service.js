@@ -2,6 +2,11 @@ const httpStatus = require('http-status');
 const { Op } = require('sequelize');
 const { Format } = require('../models');
 const ApiError = require('../utils/ApiError');
+const strings = require('../constraints/strings');
+
+const {
+  format: { errors },
+} = strings;
 /**
  * Get format by id
  * @param {ObjectId} id
@@ -53,7 +58,7 @@ const queryFormats = async (options) => {
 const updateFormatById = async (formatId, updateBody) => {
   const format = await getFormatById(formatId);
   if (!format) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Format not found or had been deleted');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   format.set(updateBody);
   await format.save();
@@ -68,7 +73,7 @@ const updateFormatById = async (formatId, updateBody) => {
 const deleteFormatById = async (formatId) => {
   const format = await getFormatById(formatId);
   if (!format) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Format not found or had been deleted');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   await format.destroy();
   return format;

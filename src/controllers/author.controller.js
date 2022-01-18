@@ -5,6 +5,11 @@ const withSequelizeSearch = require('../utils/withSequelizeSearch');
 const pick = require('../utils/pick');
 const { authorService } = require('../services');
 const withScope = require('../utils/withScope');
+const strings = require('../constraints/strings');
+
+const {
+  author: { errors },
+} = strings;
 
 const createAuthor = catchAsync(async (req, res) => {
   const author = await authorService.createAuthor(req.body);
@@ -31,7 +36,7 @@ const getAuthor = catchAsync(async (req, res) => {
   });
   const author = await authorService.getAuthorById(req.params.authorId, queryScope);
   if (!author) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Author not found');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   res.send(author);
 });
@@ -41,7 +46,7 @@ const updateAuthor = catchAsync(async (req, res) => {
   const updateOptions = pick(req.body, ['restore']);
   const currentAuthor = await authorService.getAuthorById(req.params.authorId);
   if (!currentAuthor) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Author not found');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   if (updateOptions.restore) {
     await currentAuthor.restore();

@@ -11,6 +11,11 @@ const matchScope = require('../middlewares/matchScope');
 const { flatComic } = require('./helpers');
 
 const comicQueries = require('../queries/comic.queries');
+const strings = require('../constraints/strings');
+
+const {
+  comic: { errors },
+} = strings;
 
 const createComic = catchAsync(async (req, res) => {
   const comic = await comicService.createComic(req.body);
@@ -53,7 +58,7 @@ const getComic = [
     const { scope } = pick(req.query, ['scope']);
     const comic = await comicService.getComicById(req.params.comicId, comicQueries[scope]);
     if (!comic) {
-      throw new ApiError(httpStatus.NOT_FOUND, 'Comic not found or had been deleted');
+      throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
     }
     res.send(flatComic(comic));
   }),
@@ -64,7 +69,7 @@ const updateComic = catchAsync(async (req, res) => {
   const queryOptions = comicQueries.manageUpdate;
   const comic = await comicService.updateComicById(req.params.comicId, req.body, queryOptions);
   if (!comic) {
-    throw new ApiError(httpStatus.NOT_FOUND, 'Comic not found or had been deleted');
+    throw new ApiError(httpStatus.NOT_FOUND, errors.notFound);
   }
   if (updateOptions.restore) {
     await comic.restore();

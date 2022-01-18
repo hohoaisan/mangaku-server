@@ -3,6 +3,11 @@ const _ = require('lodash');
 const { Op } = require('sequelize');
 const sequelize = require('../models/db');
 const { Chapter, Page } = require('../models');
+const strings = require('../constraints/strings');
+
+const {
+  chapter: { errors },
+} = strings;
 
 const getChapterById = async (id, options) => {
   return Chapter.findByPk(id, options);
@@ -67,7 +72,7 @@ const queryComicChapters = async (comicId, options) => {
 const deleteComicChapterById = async (comicId, chapterId) => {
   const chapter = await getChapterByIdAndComicId(chapterId, comicId);
   if (!chapter) {
-    throw new Error('Chapter not found or has been deleted');
+    throw new Error(errors.notFound);
   }
   await chapter.destroy();
   return chapter;
@@ -77,7 +82,7 @@ const updateComicChapterById = async (comicId, chapterId, updateBody, options) =
   const chapterBody = _.pick(updateBody, ['number', 'name', 'volume', 'approval_status']);
   const chapter = await getChapterByIdAndComicId(chapterId, comicId, options);
   if (!chapter) {
-    throw new Error('Chapter not found or has been deleted');
+    throw new Error(errors.notFound);
   }
   const transaction = await sequelize.transaction();
   try {
