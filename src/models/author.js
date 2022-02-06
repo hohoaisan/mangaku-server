@@ -81,6 +81,9 @@ class author extends Sequelize.Model {
             paranoid: false,
           },
           visible: {
+            where: {
+              userId: null,
+            },
             include: { model: User, as: 'user' },
           },
           deleted: {
@@ -89,6 +92,12 @@ class author extends Sequelize.Model {
               deletedAt: { [Op.not]: null },
             },
             paranoid: false,
+          },
+          authorUser: {
+            where: {
+              userId: { [Op.not]: null },
+            },
+            include: { model: User, as: 'user' },
           },
         },
       }
