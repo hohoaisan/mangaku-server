@@ -3,7 +3,7 @@ const httpStatus = require('http-status');
 const catchAsync = require('../utils/catchAsync');
 const { roleRights, enumRole } = require('../config/roles');
 const { status } = require('../constraints/approvalStatus');
-const { authorService } = require('../services');
+const { authorService, userService } = require('../services');
 const ApiError = require('../utils/ApiError');
 const strings = require('../constraints/strings');
 
@@ -15,6 +15,14 @@ const getProfile = catchAsync(async (req, res) => {
   const { user } = req;
   user.permissions = roleRights.get(user.role);
   res.status(httpStatus.OK).send(user);
+});
+
+const updateProfile = catchAsync(async (req, res) => {
+  const { user } = req;
+  user.permissions = roleRights.get(user.role);
+  const updateBody = _.pick(req.body, ['name', 'email', 'oldPassword', 'newPassword']);
+  const updatedUser = await userService.updateUserProfileById(user.id, updateBody);
+  res.status(httpStatus.OK).send(updatedUser);
 });
 
 const getUserAuthor = catchAsync(async (req, res) => {
@@ -52,4 +60,5 @@ module.exports = {
   getProfile,
   becomeAuthorCreate,
   getUserAuthor,
+  updateProfile,
 };
