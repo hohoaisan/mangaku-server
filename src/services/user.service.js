@@ -1,3 +1,4 @@
+const _ = require('lodash');
 const httpStatus = require('http-status');
 const { Op } = require('sequelize');
 const { User } = require('../models');
@@ -94,6 +95,29 @@ const deleteUserById = async (userId) => {
   return user;
 };
 
+const updateUserProfileById = async (userId, updateProps) => {
+  const user = await getUserById(userId, null);
+  const { oldPassword, newPassword } = updateProps;
+  let updateBody = _.pick(updateProps, ['name', 'email']);
+  if (oldPassword && newPassword) {
+    const isOldPasswordMatch = await user.isPasswordMatch(oldPassword);
+    if (isOldPasswordMatch) {
+      updateBody = { ...updateBody, password: newPassword };
+    } else {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'Password does not match');
+    }
+  }
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'User not found or had been deleted');
+  }
+  if (updateBody.email && (await getUserByEmail(updateBody.email, { excludeUserId: userId }))) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Email already taken');
+  }
+  user.set(updateBody);
+  await user.save();
+  return user;
+};
+
 module.exports = {
   createUser,
   queryUsers,
@@ -101,4 +125,5 @@ module.exports = {
   getUserByEmail,
   updateUserById,
   deleteUserById,
+  updateUserProfileById,
 };

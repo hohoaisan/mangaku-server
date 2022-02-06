@@ -1,10 +1,12 @@
-const { Op } = require('sequelize');
+const { Op, where, fn, col } = require('sequelize');
 
 const withSequelizeSearch =
   (query = null, field = []) =>
   (options = {}) => {
     if (query && Array.isArray(field) && field.length) {
-      const assignOpOr = [...field.map((value) => ({ [value]: { [Op.iLike]: `%${query}%` } }))];
+      const assignOpOr = [
+        ...field.map((value) => where(fn('unaccent', col(value)), { [Op.iLike]: fn('unaccent', `%${query}%`) })),
+      ];
       const newOptions = options;
       if (options.where && options.where[Op.or]) {
         newOptions.where[Op.or] = [...newOptions.where[Op.or], ...assignOpOr];
