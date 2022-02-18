@@ -20,6 +20,7 @@ const _image = require('./image');
 const _page = require('./page');
 const _readHistory = require('./readHistory');
 const _review = require('./review');
+const _statistic = require('./statistic');
 
 const sequelize = new Sequelize(database, username, password, {
   host,
@@ -43,6 +44,7 @@ const image = _image.init(sequelize, DataTypes);
 const page = _page.init(sequelize, DataTypes);
 const readHistory = _readHistory.init(sequelize, DataTypes);
 const review = _review.init(sequelize, DataTypes);
+_statistic.init(sequelize, DataTypes);
 
 author.belongsToMany(comic, { as: 'comics', through: comicAuthor, foreignKey: 'authorId', otherKey: 'comicId' });
 chapter.belongsToMany(image, { as: 'image_image_pages', through: page, foreignKey: 'chapterId', otherKey: 'imageId' });
@@ -133,21 +135,21 @@ user.hasMany(token, { as: 'tokens', foreignKey: 'user' });
 module.exports = sequelize;
 
 (async () => {
-  //   await token.sync();
-  //   await user.sync();
+  // await token.sync();
+  // await user.sync();
   // await author.sync({ force: true });
-  // await chapter.sync({ alter: true });
-  // await comic.sync({ alter: true });
+  // await chapter.sync({ force: true });
+  // await comic.sync({ force: true });
   // await comicAuthor.sync({ force: true });
   // await comicCover.sync({ force: true });
   // await comicFormat.sync({ force: true });
   // await comicGenre.sync({ force: true });
-  // await comment.sync({ alter: true, force: true });
-  // await favorite.sync({ alter: true, force: true });
-  //   await format.sync({ alter: true, force: true });
-  //   await genre.sync({ alter: true, force: true });
+  // await comment.sync({ force: true });
+  // await favorite.sync({ force: true });
+  // await format.sync({ force: true });
+  // await genre.sync({ force: true });
   // await image.sync({ force: true });
   // await page.sync({ force: true });
-  //   await readHistory.sync({ alter: true, force: true });
-  //   await review.sync({ alter: true, force: true });
+  // await readHistory.sync({ force: true });
+  // await review.sync({ force: true });
 })();

@@ -12,3 +12,4 @@ module.exports.favoriteService = require('./favorite.service');
 module.exports.historyService = require('./history.service');
 module.exports.commentService = require('./comment.service');
 module.exports.reviewService = require('./review.service');
+module.exports.statisticService = require('./statistic.service');
