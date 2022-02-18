@@ -8,14 +8,10 @@ const withSequelizeSearch =
         ...field.map((value) => where(fn('unaccent', col(value)), { [Op.iLike]: fn('unaccent', `%${query}%`) })),
       ];
       const newOptions = options;
-      if (options.where && options.where[Op.or]) {
-        newOptions.where[Op.or] = [...newOptions.where[Op.or], ...assignOpOr];
-        return newOptions;
-      }
 
       if (options.where) {
         newOptions.where = {
-          ...newOptions.where,
+          [Op.and]: newOptions.where,
           [Op.or]: assignOpOr,
         };
         return newOptions;

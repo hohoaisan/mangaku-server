@@ -11,3 +11,4 @@ module.exports.profileController = require('./profile.controller');
 module.exports.authorController = require('./author.controller');
 module.exports.comicAuthorController = require('./comicAuthor.controller');
 module.exports.chapterAuthorController = require('./chapterAuthor.controller');
+module.exports.statisticController = require('./statistic.controller');

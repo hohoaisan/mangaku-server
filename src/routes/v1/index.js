@@ -10,6 +10,7 @@ const comicRoute = require('./comic.route');
 const historyRoute = require('./readHistory.route');
 const favoriteRoute = require('./favorite.route');
 const userAuthorRoute = require('./userAuthor.route');
+const statisticRoute = require('./statistic.route');
 const docsRoute = require('./docs.route');
 const config = require('../../config/config');
 
@@ -59,6 +60,10 @@ const defaultRoutes = [
   {
     path: '/history',
     route: historyRoute,
+  },
+  {
+    path: '/statistic',
+    route: statisticRoute,
   },
 ];
 

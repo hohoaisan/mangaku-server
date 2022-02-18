@@ -15,3 +15,4 @@ module.exports.Image = require('./image');
 module.exports.Page = require('./page');
 module.exports.ReadHistory = require('./readHistory');
 module.exports.Review = require('./review');
+module.exports.Statistic = require('./statistic');
